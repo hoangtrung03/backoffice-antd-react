@@ -1,0 +1,58 @@
+{
+  "name": "backoffice-antd-react",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "lint:fix": "eslint --fix --ext ts,tsx src/",
+    "prettier": "prettier --check \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
+    "prettier:fix": "prettier --write \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
+    "commit": "cz"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "lint-staged": {
+    "*.+(js|jsx|ts|tsx)": [
+      "eslint --fix"
+    ],
+    "*.+(js|jsx|ts|tsx|json|css)": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "antd": "^5.12.1",
+    "eslint-plugin-import": "^2.29.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.3.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.53.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.4",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.0",
+    "rollup-plugin-visualizer": "^5.10.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0"
+  }
+}
