@@ -1,4 +1,4 @@
-import { DesktopOutlined, FileOutlined, PieChartOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons'
+import { FileOutlined, MailOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Breadcrumb, Layout, Menu, theme } from 'antd'
 import React, { useState } from 'react'
@@ -17,8 +17,8 @@ function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode,
 }
 
 const items: MenuItem[] = [
-  getItem('Option 1', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <DesktopOutlined />),
+  getItem('User', '1', <UserOutlined />),
+  getItem('Email Template', '2', <MailOutlined />),
   getItem('User', 'sub1', <UserOutlined />, [getItem('Tom', '3'), getItem('Bill', '4'), getItem('Alex', '5')]),
   getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
   getItem('Files', '9', <FileOutlined />)
@@ -43,10 +43,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
+          <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'Home' }]} />
           <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
             <Content style={{ margin: '24px 16px 0', overflow: 'initial' }} className='w-full'>
               <div style={{ padding: 24, textAlign: 'center', background: colorBgContainer }}>{children}</div>
