@@ -4,7 +4,7 @@ import { config } from 'src/constants/config'
 import { AuthResponse, RefreshTokenReponse } from 'src/types/auth.type'
 import { ErrorResponse } from 'src/types/utils.type'
 
-import { URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN, URL_REGISTER } from 'src/apis/auth.api'
+import { URL_AUTH, URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN, URL_REGISTER } from 'src/apis/auth.api'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import {
   clearLS,
@@ -15,6 +15,8 @@ import {
   setRefreshTokenToLS
 } from './auth'
 import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils'
+import { URL_ME, URL_USER } from 'src/apis/user.api'
+import { UserRole } from 'src/types/user.type'
 
 class Http {
   instance: AxiosInstance
@@ -37,7 +39,7 @@ class Http {
     this.instance.interceptors.request.use(
       (config) => {
         if (this.accessToken && config.headers) {
-          config.headers.authorization = this.accessToken
+          config.headers.authorization = "Bearer " + this.accessToken
           return config
         }
         return config
@@ -51,13 +53,18 @@ class Http {
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config
-        if (url === URL_LOGIN || url === URL_REGISTER) {
+        if (url === URL_AUTH + '/' + URL_LOGIN || url === URL_AUTH + '/' + URL_REGISTER) {
           const data = response.data as AuthResponse
           this.accessToken = data.data.access_token
           this.refreshToken = data.data.refresh_token
           setAccessTokenToLS(this.accessToken)
           setRefreshTokenToLS(this.refreshToken)
-          setProfileToLS(data.data.user)
+          
+        } else if (url === URL_USER + '/' + URL_ME) {
+          const data = response.data
+          if (data?.data?.roles?.some((role: UserRole) => role.name === 'ADMIN')) {
+            setProfileToLS(data.data)
+          }
         } else if (url === URL_LOGOUT) {
           this.accessToken = ''
           this.refreshToken = ''

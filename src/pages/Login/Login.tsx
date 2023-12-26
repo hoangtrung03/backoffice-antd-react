@@ -1,8 +1,10 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Button, Form, Input } from 'antd'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import authApi from 'src/apis/auth.api'
+import userApi from 'src/apis/user.api'
 import { AppContext } from 'src/contexts/app.context'
+import { UserRole } from 'src/types/user.type'
 
 interface FormData {
   email: string
@@ -11,18 +13,21 @@ interface FormData {
 
 export default function Login() {
   const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const [token, setToken] = useState<string>('')
 
   const loginMutation = useMutation({
     mutationFn: (body: FormData) => authApi.login(body)
   })
 
-  const handleSubmit = (dataForm: FormData) => {
-    console.log('dataForm', dataForm)
-    loginMutation.mutate(dataForm, {
+  const getUserProfileMutation = useMutation({
+    mutationFn: () => userApi.getUserProfile()
+  })
+
+  const handleSubmit = async (dataForm: FormData) => {
+    await loginMutation.mutate(dataForm, {
       onSuccess: (data) => {
-        setIsAuthenticated(true)
-        setProfile(data.data.data.user)
-        console.log('data', data)
+        setToken(data?.data?.data?.access_token)
+        // setIsAuthenticated(true)
       }
       // onError: (error) => {
       //   if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
@@ -39,6 +44,16 @@ export default function Login() {
       // }
     })
   }
+
+  useEffect(() => {
+    if (token) {
+      getUserProfileMutation.mutate(undefined, {
+        onSuccess: () => {
+          setIsAuthenticated(true)
+        }
+      })
+    }
+  }, [token])
 
   // const { data: productsData } = useQuery({
   //   queryKey: ['products', queryConfig],
