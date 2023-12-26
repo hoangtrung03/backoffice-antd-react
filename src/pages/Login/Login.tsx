@@ -56,31 +56,36 @@ export default function Login() {
   }
 
   return (
-    <Form
-      name='form-login'
-      initialValues={{
-        remember: true
-      }}
-      labelCol={{ span: 4 }}
-      wrapperCol={{ span: 20 }}
-      labelAlign='left'
-      style={{ maxWidth: 600 }}
-      noValidate
-      onFinish={handleSubmit}
-      validateMessages={validateMessages}
-      className='p-10 shadow-black1 rounded-lg w-full'
-    >
-      <Form.Item label='Email' name='email' rules={[{ required: true }]} className='mb-4'>
-        <Input />
-      </Form.Item>
-
-      <Form.Item label='Password' name='password' rules={[{ required: true }]} className='mb-4'>
-        <Input type='password' />
-      </Form.Item>
-
-      <Button type='default' htmlType='submit' className='w-full'>
-        Submit
-      </Button>
-    </Form>
+    <>
+      <h1 className='font-bold text-32 md:text-48 mb-4'>Login</h1>
+      <Form
+        name='form-login'
+        initialValues={{
+          remember: true
+        }}
+        labelCol={{ span: 4 }}
+        wrapperCol={{ span: 20 }}
+        labelAlign='left'
+        style={{ maxWidth: 600 }}
+        noValidate
+        onFinish={handleSubmit}
+        validateMessages={validateMessages}
+        className='p-10 shadow-black1 rounded-lg w-full'
+      >
+        <div className='mb-4 md:mb-8'>
+          <Form.Item label='Email' name='email' rules={[{ required: true }]} className='mb-4 font-medium'>
+            <Input placeholder='Enter your email' className='h-10' />
+          </Form.Item>
+        </div>
+        <div className='mb-4 md:mb-8'>
+          <Form.Item label='Password' name='password' rules={[{ required: true }]} className='mb-4 font-medium'>
+            <Input.Password placeholder='Enter your password' className='h-10' />
+          </Form.Item>
+        </div>
+        <Button type='default' htmlType='submit' className='w-full'>
+          Submit
+        </Button>
+      </Form>
+    </>
   )
 }

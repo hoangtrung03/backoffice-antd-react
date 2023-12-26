@@ -1,6 +1,6 @@
 import { FileOutlined, MailOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
-import { Breadcrumb, Layout, Menu, theme } from 'antd'
+import { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } from 'antd'
 import React, { useState } from 'react'
 
 const { Header, Content, Footer, Sider } = Layout
@@ -37,18 +37,28 @@ export default function MainLayout({ children }: MainLayoutProps) {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div className='demo-logo-vertical' />
+        <p className='font-bold uppercase text-28 text-white py-4 text-center'>Ecommerce</p>
         <Menu theme='dark' defaultSelectedKeys={['1']} mode='inline' items={items} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }} items={[{ title: 'Home' }]} />
-          <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
-            <Content style={{ margin: '24px 16px 0', overflow: 'initial' }} className='w-full'>
-              <div style={{ padding: 24, textAlign: 'center', background: colorBgContainer }}>{children}</div>
-            </Content>
-          </div>
+        <Header
+          style={{ padding: 0, background: colorBgContainer }}
+          className='flex justify-end items-center !px-4 h-12'
+        >
+          <Dropdown menu={{ items }}>
+            <Avatar
+              src='https://d2welvdu9aysdk.cloudfront.net/uploads/account/img-avatar-user.png'
+              className='cursor-pointer'
+            />
+          </Dropdown>
+        </Header>
+        <Content className='px-4'>
+          <Breadcrumb items={[{ title: 'User' }]} className='py-2' />
+          <Content className='w-full'>
+            <div style={{ background: colorBgContainer }} className='p-4'>
+              {children}
+            </div>
+          </Content>
         </Content>
         <Footer style={{ textAlign: 'center' }}>Back Office</Footer>
       </Layout>
