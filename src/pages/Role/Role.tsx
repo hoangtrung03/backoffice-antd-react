@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, Modal, Pagination, PaginationProps, Select, Space, Table } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import roleApi from 'src/apis/role.api'
 import useQueryConfig from 'src/hooks/useQueryConfig'
 import { UserType } from 'src/types/user.type'
@@ -14,6 +15,7 @@ export default function Role() {
   const [selectedListUserId, setListselectedRoleId] = useState<number[] | string[]>([])
   const [form] = Form.useForm()
   const queryConfig = useQueryConfig()
+  const navigate = useNavigate()
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['role', queryConfig],
@@ -29,7 +31,7 @@ export default function Role() {
   // })
 
   const handleEdit = (id: number) => {
-    console.log(id)
+    navigate(`/role/${id}`)
   }
 
   const handleDelete = (id: number) => {

@@ -7,6 +7,7 @@ import MainLayout from './layouts/MainLayout'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
 import Role from './pages/Role'
+import EditRole from './pages/Role/EditRole'
 import User from './pages/User'
 
 function ProtectedRoute() {
@@ -41,6 +42,16 @@ export default function useRouteElements() {
             <MainLayout>
               <Suspense>
                 <Role />
+              </Suspense>
+            </MainLayout>
+          )
+        },
+        {
+          path: '/role/:id',
+          element: (
+            <MainLayout>
+              <Suspense>
+                <EditRole />
               </Suspense>
             </MainLayout>
           )
