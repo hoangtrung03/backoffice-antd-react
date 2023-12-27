@@ -6,6 +6,7 @@ import AuthLayout from './layouts/AuthLayout'
 import MainLayout from './layouts/MainLayout'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
+import Role from './pages/Role'
 import User from './pages/User'
 
 function ProtectedRoute() {
@@ -30,6 +31,16 @@ export default function useRouteElements() {
             <MainLayout>
               <Suspense>
                 <User />
+              </Suspense>
+            </MainLayout>
+          )
+        },
+        {
+          path: '/role',
+          element: (
+            <MainLayout>
+              <Suspense>
+                <Role />
               </Suspense>
             </MainLayout>
           )

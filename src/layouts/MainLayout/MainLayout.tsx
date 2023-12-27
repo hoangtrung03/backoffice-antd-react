@@ -1,7 +1,9 @@
-import { FileOutlined, MailOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons'
+import { FileOutlined, KeyOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } from 'antd'
 import React, { useContext, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import path from 'src/constants/path'
 import { AppContext } from 'src/contexts/app.context'
 
 const { Header, Content, Footer, Sider } = Layout
@@ -18,11 +20,23 @@ function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode,
 }
 
 const items: MenuItem[] = [
-  getItem('User', '1', <UserOutlined />),
-  getItem('Email Template', '2', <MailOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [getItem('Tom', '3'), getItem('Bill', '4'), getItem('Alex', '5')]),
-  getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-  getItem('Files', '9', <FileOutlined />)
+  getItem(
+    <Link to={path.home} title='User'>
+      User
+    </Link>,
+    '1',
+    <UserOutlined />
+  ),
+  getItem(
+    <Link to={path.role} title='Role'>
+      Role
+    </Link>,
+    '2',
+    <KeyOutlined />
+  ),
+  getItem('Email Template', '3', <MailOutlined />),
+  // getItem('Team', '4', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
+  getItem('Files', '5', <FileOutlined />)
 ]
 
 interface MainLayoutProps {
@@ -30,6 +44,7 @@ interface MainLayoutProps {
 }
 
 export default function MainLayout({ children }: MainLayoutProps) {
+  const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
   const {
     token: { colorBgContainer }
@@ -37,11 +52,21 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   const { profile } = useContext(AppContext)
 
+  const routes = [
+    { path: '/', key: '1' },
+    { path: '/role', key: '2' },
+    { path: '/email', key: '3' },
+    { path: '/files', key: '4' }
+  ]
+
+  const currentRoute = routes.find((route) => route.path === location.pathname)
+  const defaultSelectedKey = currentRoute ? currentRoute.key : '1'
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <p className='font-bold uppercase text-28 text-white py-4 text-center'>Ecommerce</p>
-        <Menu theme='dark' defaultSelectedKeys={['1']} mode='inline' items={items} />
+        <Menu theme='dark' defaultSelectedKeys={[defaultSelectedKey]} mode='inline' items={items} />
       </Sider>
       <Layout>
         <Header
