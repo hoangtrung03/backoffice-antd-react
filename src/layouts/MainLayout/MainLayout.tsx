@@ -1,7 +1,8 @@
 import { FileOutlined, MailOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } from 'antd'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import { AppContext } from 'src/contexts/app.context'
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -34,6 +35,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
     token: { colorBgContainer }
   } = theme.useToken()
 
+  const { profile } = useContext(AppContext)
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
@@ -45,6 +48,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           style={{ padding: 0, background: colorBgContainer }}
           className='flex justify-end items-center !px-4 h-12'
         >
+          <p className='mr-4'>{profile?.firstname + ' ' + profile?.lastname}</p>
           <Dropdown menu={{ items }}>
             <Avatar
               src='https://d2welvdu9aysdk.cloudfront.net/uploads/account/img-avatar-user.png'

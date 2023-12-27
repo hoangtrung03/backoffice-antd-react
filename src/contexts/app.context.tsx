@@ -1,12 +1,12 @@
 import { createContext, useState } from 'react'
-import { User } from 'src/types/user.type'
+import { UserType } from 'src/types/user.type'
 import { getAccessTokenFromCookie, getProfileFromCookie } from 'src/utils/auth'
 
 interface AppContextInterface {
   isAuthenticated: boolean
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>
-  profile: User | null
-  setProfile: React.Dispatch<React.SetStateAction<User | null>>
+  profile: UserType | null
+  setProfile: React.Dispatch<React.SetStateAction<UserType | null>>
   reset: () => void
 }
 
@@ -22,7 +22,7 @@ export const AppContext = createContext<AppContextInterface>(initialAppContext)
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(initialAppContext.isAuthenticated)
-  const [profile, setProfile] = useState<User | null>(initialAppContext.profile)
+  const [profile, setProfile] = useState<UserType | null>(initialAppContext.profile)
   const reset = () => {
     setIsAuthenticated(false)
     setProfile(null)

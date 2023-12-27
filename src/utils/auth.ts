@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-import { User } from 'src/types/user.type'
+import { UserType } from 'src/types/user.type'
 
 export const localStorageEventTarget = new EventTarget()
 
@@ -27,6 +27,6 @@ export const getProfileFromCookie = () => {
   return result ? JSON.parse(result) : null
 }
 
-export const setProfileToCookie = (profile: User) => {
+export const setProfileToCookie = (profile: UserType) => {
   Cookies.set('profile', JSON.stringify(profile))
 }

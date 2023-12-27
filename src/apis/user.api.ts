@@ -15,6 +15,9 @@ const userApi = {
   },
   deleteUserById(id: number | string) {
     return http.delete<SuccessResponse<UserType>>(URL_USER + '/' + URL_DELETE + '/' + id)
+  },
+  deleteUserByIds(ids: string) {
+    return http.delete<SuccessResponse<UserType[]>>(URL_USER + '/' + URL_DELETE + '?ids=' + ids)
   }
 }
 
