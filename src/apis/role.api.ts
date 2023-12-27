@@ -1,5 +1,5 @@
-import { UserType } from 'src/types/user.type'
-import { PaginationParams, ResponseWithPagination } from '../types/utils.type'
+import { UserRole, UserType } from 'src/types/user.type'
+import { PaginationParams, ResponseWithPagination, SuccessResponse } from '../types/utils.type'
 
 import http from 'src/utils/http'
 export const URL_ROLE = 'role'
@@ -11,6 +11,9 @@ const roleApi = {
         ...queryParam
       }
     })
+  },
+  getRoleById(id: string | number) {
+    return http.get<SuccessResponse<UserRole>>(URL_ROLE + '/get/' + id)
   }
   // deleteUserById(id: number | string) {
   //   return http.delete<SuccessResponse<UserType>>(URL_ROLE + '/' + URL_DELETE + '/' + id)
