@@ -81,7 +81,9 @@ class Http {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const data: any | undefined = error.response?.data
           const message = data?.message || error.message
-          toast.error(message)
+          toast.error(message, {
+            position: 'top-right'
+          })
         }
 
         if (isAxiosUnauthorizedError<ErrorResponse<{ name: string; message: string }>>(error)) {
@@ -108,7 +110,9 @@ class Http {
           this.refreshToken = ''
 
           if (error.response?.data?.message) {
-            toast.error(error.response.data.message)
+            toast.error(error.response.data.message, {
+              position: 'top-right'
+            })
           }
         }
 

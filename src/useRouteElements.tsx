@@ -6,6 +6,7 @@ import AuthLayout from './layouts/AuthLayout'
 import MainLayout from './layouts/MainLayout'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
+import User from './pages/User'
 
 function ProtectedRoute() {
   const { isAuthenticated } = useContext(AppContext)
@@ -27,7 +28,9 @@ export default function useRouteElements() {
           path: '/',
           element: (
             <MainLayout>
-              <Suspense>abc</Suspense>
+              <Suspense>
+                <User />
+              </Suspense>
             </MainLayout>
           )
         }
