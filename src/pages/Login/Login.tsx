@@ -6,7 +6,7 @@ import authApi from 'src/apis/auth.api'
 import userApi from 'src/apis/user.api'
 import { AppContext } from 'src/contexts/app.context'
 import { ErrorResponse } from 'src/types/utils.type'
-import { clearLS } from 'src/utils/auth'
+import { clearCookies } from 'src/utils/auth'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 
 interface FormData {
@@ -68,7 +68,7 @@ export default function Login() {
             })
           } else {
             reset()
-            clearLS()
+            clearCookies()
             toast.error('You are not ADMIN', {
               position: 'top-right'
             })

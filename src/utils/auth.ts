@@ -1,31 +1,32 @@
+import Cookies from 'js-cookie'
 import { User } from 'src/types/user.type'
 
 export const localStorageEventTarget = new EventTarget()
 
-export const setAccessTokenToLS = (access_token: string) => {
-  localStorage.setItem('access_token', access_token)
+export const setAccessTokenToCookie = (access_token: string) => {
+  Cookies.set('access_token', access_token)
 }
 
-export const setRefreshTokenToLS = (refresh_token: string) => {
-  localStorage.setItem('refresh_token', refresh_token)
+export const setRefreshTokenToCookie = (refresh_token: string) => {
+  Cookies.set('refresh_token', refresh_token)
 }
 
-export const clearLS = () => {
-  localStorage.removeItem('access_token')
-  localStorage.removeItem('refresh_token')
-  localStorage.removeItem('profile')
-  const clearLSEvent = new Event('clearLS')
-  localStorageEventTarget.dispatchEvent(clearLSEvent)
+export const clearCookies = () => {
+  Cookies.remove('access_token')
+  Cookies.remove('refresh_token')
+  Cookies.remove('profile')
+  const clearCookiesEvent = new Event('clearCookies')
+  localStorageEventTarget.dispatchEvent(clearCookiesEvent)
 }
 
-export const getAccessTokenFromLS = () => localStorage.getItem('access_token') || ''
-export const getRefreshTokenFromLS = () => localStorage.getItem('refresh_token') || ''
+export const getAccessTokenFromCookie = () => Cookies.get('access_token') || ''
+export const getRefreshTokenFromCookie = () => Cookies.get('refresh_token') || ''
 
-export const getProfileFromLS = () => {
-  const result = localStorage.getItem('profile')
+export const getProfileFromCookie = () => {
+  const result = Cookies.get('profile')
   return result ? JSON.parse(result) : null
 }
 
-export const setProfileToLS = (profile: User) => {
-  localStorage.setItem('profile', JSON.stringify(profile))
+export const setProfileToCookie = (profile: User) => {
+  Cookies.set('profile', JSON.stringify(profile))
 }

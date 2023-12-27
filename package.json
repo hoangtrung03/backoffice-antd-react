@@ -32,6 +32,7 @@
     "antd": "^5.12.1",
     "axios": "^1.6.2",
     "eslint-plugin-import": "^2.29.0",
+    "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.14.6",
+    "@types/js-cookie": "^3.0.6",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
     "@typescript-eslint/eslint-plugin": "^6.10.0",

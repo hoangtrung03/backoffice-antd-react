@@ -10,12 +10,12 @@ import { URL_ME, URL_USER } from 'src/apis/user.api'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import { UserRole } from 'src/types/user.type'
 import {
-  clearLS,
-  getAccessTokenFromLS,
-  getRefreshTokenFromLS,
-  setAccessTokenToLS,
-  setProfileToLS,
-  setRefreshTokenToLS
+  clearCookies,
+  getAccessTokenFromCookie,
+  getRefreshTokenFromCookie,
+  setAccessTokenToCookie,
+  setProfileToCookie,
+  setRefreshTokenToCookie
 } from './auth'
 import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils'
 
@@ -25,8 +25,8 @@ class Http {
   private refreshToken: string
   private refreshTokenRequest: Promise<string> | null
   constructor() {
-    this.accessToken = getAccessTokenFromLS()
-    this.refreshToken = getRefreshTokenFromLS()
+    this.accessToken = getAccessTokenFromCookie()
+    this.refreshToken = getRefreshTokenFromCookie()
     this.refreshTokenRequest = null
     this.instance = axios.create({
       baseURL: config.BASE_URL,
@@ -59,18 +59,18 @@ class Http {
           const data = response.data as AuthResponse
           this.accessToken = data.data.access_token
           this.refreshToken = data.data.refresh_token
-          setAccessTokenToLS(this.accessToken)
-          setRefreshTokenToLS(this.refreshToken)
+          setAccessTokenToCookie(this.accessToken)
+          setRefreshTokenToCookie(this.refreshToken)
         } else if (url === URL_USER + '/' + URL_ME) {
           const data = response.data
 
           if (data?.data?.roles?.some((role: UserRole) => role.name.includes('ADMIN'))) {
-            setProfileToLS(data.data)
+            setProfileToCookie(data.data)
           }
         } else if (url === URL_LOGOUT) {
           this.accessToken = ''
           this.refreshToken = ''
-          clearLS()
+          clearCookies()
         }
         return response
       },
@@ -103,7 +103,7 @@ class Http {
               return this.instance({ ...config, headers: { ...config.headers, authorization: access_token } })
             })
           }
-          clearLS()
+          clearCookies()
           this.accessToken = ''
           this.refreshToken = ''
 
@@ -123,13 +123,13 @@ class Http {
       })
       .then((res) => {
         const { access_token } = res.data.data
-        setAccessTokenToLS(access_token)
+        setAccessTokenToCookie(access_token)
         this.accessToken = access_token
 
         return access_token
       })
       .catch((error) => {
-        clearLS()
+        clearCookies()
         this.accessToken = ''
         this.refreshToken = ''
 
