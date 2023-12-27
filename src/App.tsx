@@ -1,4 +1,5 @@
 import { Suspense, useContext, useEffect } from 'react'
+import { Toaster } from 'react-hot-toast'
 import ErrorBoundary from './components/ErrorBoundary'
 import { AppContext } from './contexts/app.context'
 import useRouteElements from './useRouteElements'
@@ -20,6 +21,7 @@ function App() {
     <>
       <ErrorBoundary>
         <Suspense fallback={<div />}>{routeElements}</Suspense>
+        <Toaster />
       </ErrorBoundary>
     </>
   )

@@ -4,8 +4,11 @@ import { config } from 'src/constants/config'
 import { AuthResponse, RefreshTokenReponse } from 'src/types/auth.type'
 import { ErrorResponse } from 'src/types/utils.type'
 
+import toast from 'react-hot-toast'
 import { URL_AUTH, URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN, URL_REGISTER } from 'src/apis/auth.api'
+import { URL_ME, URL_USER } from 'src/apis/user.api'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
+import { UserRole } from 'src/types/user.type'
 import {
   clearLS,
   getAccessTokenFromLS,
@@ -15,8 +18,6 @@ import {
   setRefreshTokenToLS
 } from './auth'
 import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils'
-import { URL_ME, URL_USER } from 'src/apis/user.api'
-import { UserRole } from 'src/types/user.type'
 
 class Http {
   instance: AxiosInstance
@@ -39,7 +40,7 @@ class Http {
     this.instance.interceptors.request.use(
       (config) => {
         if (this.accessToken && config.headers) {
-          config.headers.authorization = "Bearer " + this.accessToken
+          config.headers.authorization = 'Bearer ' + this.accessToken
           return config
         }
         return config
@@ -53,16 +54,17 @@ class Http {
     this.instance.interceptors.response.use(
       (response) => {
         const { url } = response.config
+
         if (url === URL_AUTH + '/' + URL_LOGIN || url === URL_AUTH + '/' + URL_REGISTER) {
           const data = response.data as AuthResponse
           this.accessToken = data.data.access_token
           this.refreshToken = data.data.refresh_token
           setAccessTokenToLS(this.accessToken)
           setRefreshTokenToLS(this.refreshToken)
-          
         } else if (url === URL_USER + '/' + URL_ME) {
           const data = response.data
-          if (data?.data?.roles?.some((role: UserRole) => role.name === 'ADMIN')) {
+
+          if (data?.data?.roles?.some((role: UserRole) => role.name.includes('ADMIN'))) {
             setProfileToLS(data.data)
           }
         } else if (url === URL_LOGOUT) {
@@ -77,10 +79,11 @@ class Http {
           ![HttpStatusCode.UnprocessableEntity, HttpStatusCode.Unauthorized].includes(error.response?.status as number)
         ) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          // const data: any | undefined = error.response?.data
-          // const message = data?.message || error.message
-          // toast.error(message)
+          const data: any | undefined = error.response?.data
+          const message = data?.message || error.message
+          toast.error(message)
         }
+
         if (isAxiosUnauthorizedError<ErrorResponse<{ name: string; message: string }>>(error)) {
           const config = error.response?.config || ({ headers: {} } as InternalAxiosRequestConfig)
           const { url } = config
@@ -95,6 +98,7 @@ class Http {
                     this.refreshTokenRequest = null
                   }, 10000)
                 })
+
             return this.refreshTokenRequest.then((access_token) => {
               return this.instance({ ...config, headers: { ...config.headers, authorization: access_token } })
             })
@@ -102,8 +106,12 @@ class Http {
           clearLS()
           this.accessToken = ''
           this.refreshToken = ''
-          // toast.error(error.response?.data.data?.message || error.response?.data.message)
+
+          if (error.response?.data?.message) {
+            toast.error(error.response.data.message)
+          }
         }
+
         return Promise.reject(error)
       }
     )
@@ -117,12 +125,14 @@ class Http {
         const { access_token } = res.data.data
         setAccessTokenToLS(access_token)
         this.accessToken = access_token
+
         return access_token
       })
       .catch((error) => {
         clearLS()
         this.accessToken = ''
         this.refreshToken = ''
+
         throw error
       })
   }

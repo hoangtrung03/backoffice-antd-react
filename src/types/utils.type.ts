@@ -1,4 +1,5 @@
 export interface ErrorResponse<Data> {
+  code: number
   message: string
   data: Data
 }

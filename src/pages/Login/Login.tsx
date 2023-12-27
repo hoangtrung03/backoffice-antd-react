@@ -1,19 +1,29 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { Button, Form, Input } from 'antd'
 import { useContext, useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 import authApi from 'src/apis/auth.api'
 import userApi from 'src/apis/user.api'
 import { AppContext } from 'src/contexts/app.context'
-import { UserRole } from 'src/types/user.type'
+import { ErrorResponse } from 'src/types/utils.type'
+import { clearLS } from 'src/utils/auth'
+import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 
 interface FormData {
   email: string
   password: string
 }
 
+interface Validate {
+  name: string
+  message: string
+}
+
 export default function Login() {
-  const { setIsAuthenticated, setProfile } = useContext(AppContext)
+  const [form] = Form.useForm()
+  const { setIsAuthenticated, reset } = useContext(AppContext)
   const [token, setToken] = useState<string>('')
+  const [message, setMessage] = useState<string>('')
 
   const loginMutation = useMutation({
     mutationFn: (body: FormData) => authApi.login(body)
@@ -23,45 +33,52 @@ export default function Login() {
     mutationFn: () => userApi.getUserProfile()
   })
 
-  const handleSubmit = async (dataForm: FormData) => {
-    await loginMutation.mutate(dataForm, {
+  const handleSubmit = (dataForm: FormData) => {
+    loginMutation.mutate(dataForm, {
       onSuccess: (data) => {
         setToken(data?.data?.data?.access_token)
-        // setIsAuthenticated(true)
+        setMessage(data?.data?.message)
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      onError: (error: any) => {
+        if (isAxiosUnprocessableEntityError<ErrorResponse<Validate>>(error)) {
+          const formError = error.response?.data.data
+
+          if (formError) {
+            form.setFields([
+              {
+                name: formError.name,
+                errors: [formError.message]
+              }
+            ])
+          }
+        }
       }
-      // onError: (error) => {
-      //   if (isAxiosUnprocessableEntityError<ErrorResponse<FormData>>(error)) {
-      //     const formError = error.response?.data.data
-      //     if (formError) {
-      //       Object.keys(formError).forEach((key) => {
-      //         setError(key as keyof FormData, {
-      //           message: formError[key as keyof FormData],
-      //           type: 'Server'
-      //         })
-      //       })
-      //     }
-      //   }
-      // }
     })
   }
 
   useEffect(() => {
     if (token) {
       getUserProfileMutation.mutate(undefined, {
-        onSuccess: () => {
-          setIsAuthenticated(true)
+        onSuccess: (data) => {
+          if (data?.data?.data?.roles.some((role) => role.name.includes('ADMIN'))) {
+            setIsAuthenticated(true)
+            toast.success(message, {
+              position: 'top-right'
+            })
+          } else {
+            reset()
+            clearLS()
+            toast.error('You are not ADMIN', {
+              position: 'top-right'
+            })
+          }
         }
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
-  // const { data: productsData } = useQuery({
-  //   queryKey: ['products', queryConfig],
-  //   queryFn: () => {
-  //     return productApi.getProducts(queryConfig as ProductListConfig)
-  //   },
-  //   keepPreviousData: true
-  // })
   const validateMessages = {
     required: '${label} is required!',
     types: {
@@ -74,6 +91,7 @@ export default function Login() {
     <>
       <h1 className='font-bold text-32 md:text-48 mb-4'>Login</h1>
       <Form
+        form={form}
         name='form-login'
         initialValues={{
           remember: true
@@ -83,6 +101,7 @@ export default function Login() {
         labelAlign='left'
         style={{ maxWidth: 600 }}
         noValidate
+        scrollToFirstError
         onFinish={handleSubmit}
         validateMessages={validateMessages}
         className='p-10 shadow-black1 rounded-lg w-full'
