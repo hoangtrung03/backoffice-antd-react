@@ -32,3 +32,11 @@ interface Pagination {
 export interface ResponseWithPagination<T> extends SuccessResponse<T> {
   pagination: Pagination
 }
+
+export interface TableType {
+  title: string
+  dataIndex: string
+  key: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  render?: any
+}

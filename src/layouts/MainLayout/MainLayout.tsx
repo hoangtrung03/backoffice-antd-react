@@ -54,7 +54,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   const routes = [
     { path: path.home, key: '1' },
-    { path: `/${path.role}`, key: '2' },
+    { path: `${path.role}`, key: '2' },
     { path: '/email', key: '3' },
     { path: '/files', key: '4' }
   ]

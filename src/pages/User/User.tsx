@@ -5,15 +5,7 @@ import { useState } from 'react'
 import userApi from 'src/apis/user.api'
 import useQueryConfig from 'src/hooks/useQueryConfig'
 import { UserType } from 'src/types/user.type'
-import { PaginationParams } from 'src/types/utils.type'
-
-interface TableType {
-  title: string
-  dataIndex: string
-  key: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  render?: any
-}
+import { PaginationParams, TableType } from 'src/types/utils.type'
 
 export default function User() {
   const [open, setOpen] = useState(false)
@@ -57,12 +49,6 @@ export default function User() {
     onChange: (selectedRowKeys) => {
       setListSelectedUserId(selectedRowKeys.map((id) => id.toString()))
     }
-    // onSelect: (record, selected, selectedRows) => {
-    //   console.log(record, selected, selectedRows)
-    // },
-    // onSelectAll: (selected, selectedRows, changeRows) => {
-    //   console.log(selected, selectedRows, changeRows)
-    // }
   }
 
   const columns: TableType[] = [
@@ -175,15 +161,17 @@ export default function User() {
         className='overflow-x-auto scrollbar-input'
         pagination={false}
       />
-      <Pagination
-        showQuickJumper
-        current={data?.data?.pagination?.page}
-        pageSize={data?.data?.pagination?.size}
-        total={(data?.data?.pagination?.total_page ?? 0) * (data?.data?.pagination?.size ?? 1)}
-        onChange={handleChangePagination}
-        showSizeChanger={false}
-        className='mt-4 text-right'
-      />
+      {data?.data?.pagination?.total_page !== 1 && (
+        <Pagination
+          showQuickJumper
+          current={data?.data?.pagination?.page}
+          pageSize={data?.data?.pagination?.size}
+          total={(data?.data?.pagination?.total_page ?? 0) * (data?.data?.pagination?.size ?? 1)}
+          onChange={handleChangePagination}
+          showSizeChanger={false}
+          className='mt-4 text-right'
+        />
+      )}
       <Modal
         title='Confirm delete'
         open={open}
