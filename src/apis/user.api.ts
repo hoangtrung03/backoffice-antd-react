@@ -1,5 +1,6 @@
 import { UserType } from 'src/types/user.type'
-import { SuccessResponse } from 'src/types/utils.type'
+import { PaginationParams, ResponseWithPagination, SuccessResponse } from './../types/utils.type'
+
 import http from 'src/utils/http'
 export const URL_USER = 'users'
 export const URL_ME = 'me'
@@ -10,8 +11,12 @@ const userApi = {
   getUserProfile() {
     return http.get<SuccessResponse<UserType>>(URL_USER + '/' + URL_ME)
   },
-  getAllUser() {
-    return http.get<SuccessResponse<UserType[]>>(URL_USER + '/' + URL_ALL)
+  getAllUser(queryParam?: PaginationParams) {
+    return http.get<ResponseWithPagination<UserType[]>>(URL_USER + '/' + URL_ALL, {
+      params: {
+        ...queryParam
+      }
+    })
   },
   deleteUserById(id: number | string) {
     return http.delete<SuccessResponse<UserType>>(URL_USER + '/' + URL_DELETE + '/' + id)

@@ -6,6 +6,8 @@ import { ErrorResponse } from 'src/types/utils.type'
 
 import toast from 'react-hot-toast'
 import { URL_AUTH, URL_LOGIN, URL_LOGOUT, URL_REFRESH_TOKEN, URL_REGISTER } from 'src/apis/auth.api'
+
+// eslint-disable-next-line import/namespace
 import { URL_ME, URL_USER } from 'src/apis/user.api'
 import HttpStatusCode from 'src/constants/httpStatusCode.enum'
 import { UserRole } from 'src/types/user.type'

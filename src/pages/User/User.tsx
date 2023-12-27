@@ -1,9 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Button, Flex, Form, Modal, Select, Space, Table } from 'antd'
+import { Button, Flex, Form, Modal, Pagination, PaginationProps, Select, Space, Table } from 'antd'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { useState } from 'react'
 import userApi from 'src/apis/user.api'
+import useQueryConfig from 'src/hooks/useQueryConfig'
 import { UserType } from 'src/types/user.type'
+import { PaginationParams } from 'src/types/utils.type'
 
 interface TableType {
   title: string
@@ -18,10 +20,11 @@ export default function User() {
   const [selectedUserId, setSelectedUserId] = useState<number | string>('')
   const [selectedListUserId, setListSelectedUserId] = useState<number[] | string[]>([])
   const [form] = Form.useForm()
+  const queryConfig = useQueryConfig()
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['user'],
-    queryFn: () => userApi.getAllUser()
+    queryKey: ['user', queryConfig],
+    queryFn: () => userApi.getAllUser(queryConfig as PaginationParams)
   })
 
   const deleteUserMutation = useMutation({
@@ -133,6 +136,11 @@ export default function User() {
     }
   }
 
+  const handleChangePagination: PaginationProps['onChange'] = (pageNumber) => {
+    queryConfig.page = pageNumber.toString()
+    refetch()
+  }
+
   return (
     <>
       <Flex justify='space-between' align='center'>
@@ -165,6 +173,16 @@ export default function User() {
         loading={isLoading}
         bordered
         className='overflow-x-auto scrollbar-input'
+        pagination={false}
+      />
+      <Pagination
+        showQuickJumper
+        current={data?.data?.pagination?.page}
+        pageSize={data?.data?.pagination?.size}
+        total={(data?.data?.pagination?.total_page ?? 0) * (data?.data?.pagination?.size ?? 1)}
+        onChange={handleChangePagination}
+        showSizeChanger={false}
+        className='mt-4 text-right'
       />
       <Modal
         title='Confirm delete'
