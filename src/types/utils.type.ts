@@ -23,14 +23,14 @@ export interface PaginationParams {
   sort_direction?: 'asc' | 'desc'
 }
 
-interface Pagination {
+export interface PaginationType {
   page?: number
   size?: number
   total_page?: number
 }
 
 export interface ResponseWithPagination<T> extends SuccessResponse<T> {
-  pagination: Pagination
+  pagination: PaginationType
 }
 
 export interface TableType {

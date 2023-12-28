@@ -14,13 +14,16 @@ const roleApi = {
   },
   getRoleById(id: string | number) {
     return http.get<SuccessResponse<UserRole>>(URL_ROLE + '/get/' + id)
+  },
+  updateRoleById(body: { id: string | number; name: string }) {
+    return http.put<SuccessResponse<UserRole>>(URL_ROLE + '/update/' + body.id, body)
+  },
+  createRole(body: { name: string }) {
+    return http.post<SuccessResponse<UserRole>>(URL_ROLE + '/create', body)
+  },
+  deleteRoleById(id: number | string) {
+    return http.delete<SuccessResponse<UserType>>(URL_ROLE + '/delete' + '/' + id)
   }
-  // deleteUserById(id: number | string) {
-  //   return http.delete<SuccessResponse<UserType>>(URL_ROLE + '/' + URL_DELETE + '/' + id)
-  // },
-  // deleteUserByIds(ids: string) {
-  //   return http.delete<SuccessResponse<UserType[]>>(URL_ROLE + '/' + URL_DELETE + '?ids=' + ids)
-  // }
 }
 
 export default roleApi

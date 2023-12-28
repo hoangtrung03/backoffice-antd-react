@@ -1,23 +1,38 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { Button, Flex, Form, Modal, Pagination, PaginationProps, Select, Space, Table } from 'antd'
+import { useMutation } from '@tanstack/react-query'
+import { Button, Flex, Form, Input, Modal, Pagination, PaginationProps, Select, Space, Table } from 'antd'
+import { SearchProps } from 'antd/es/input'
 import { TableRowSelection } from 'antd/es/table/interface'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import userApi from 'src/apis/user.api'
 import useQueryConfig from 'src/hooks/useQueryConfig'
 import { UserType } from 'src/types/user.type'
-import { PaginationParams, TableType } from 'src/types/utils.type'
+import { PaginationParams, PaginationType, TableType } from 'src/types/utils.type'
+const { Search } = Input
 
 export default function User() {
   const [open, setOpen] = useState(false)
   const [selectedUserId, setSelectedUserId] = useState<number | string>('')
   const [selectedListUserId, setListSelectedUserId] = useState<number[] | string[]>([])
+  const [userData, setUserData] = useState<UserType[] | undefined>([])
+  const [paginationData, setPaginationData] = useState<PaginationType | undefined>({})
+  const navigate = useNavigate()
   const [form] = Form.useForm()
   const queryConfig = useQueryConfig()
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['user', queryConfig],
-    queryFn: () => userApi.getAllUser(queryConfig as PaginationParams)
+  const getAllUserMutation = useMutation({
+    mutationFn: (queryParam?: PaginationParams) => userApi.getAllUser(queryParam)
   })
+
+  useEffect(() => {
+    getAllUserMutation.mutate(queryConfig as PaginationParams, {
+      onSuccess: (data) => {
+        setUserData(data?.data?.data)
+        setPaginationData(data?.data?.pagination)
+      }
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const deleteUserMutation = useMutation({
     mutationFn: (id: number | string) => userApi.deleteUserById(id)
@@ -25,6 +40,10 @@ export default function User() {
 
   const deleteListUserMutation = useMutation({
     mutationFn: (id: string) => userApi.deleteUserByIds(id)
+  })
+
+  const searchMutation = useMutation({
+    mutationFn: (value: string, queryParam?: PaginationParams) => userApi.searchUser(value, queryParam)
   })
 
   const handleEdit = (id: number) => {
@@ -39,7 +58,7 @@ export default function User() {
   const handleOnOK = (id: number | string) => {
     deleteUserMutation.mutate(id, {
       onSuccess: () => {
-        refetch()
+        getAllUserMutation.reset()
       }
     })
     setOpen(false)
@@ -114,7 +133,6 @@ export default function User() {
       ids &&
         deleteListUserMutation.mutate(ids, {
           onSuccess: () => {
-            refetch()
             setListSelectedUserId([])
           }
         })
@@ -124,19 +142,29 @@ export default function User() {
 
   const handleChangePagination: PaginationProps['onChange'] = (pageNumber) => {
     queryConfig.page = pageNumber.toString()
-    refetch()
+  }
+
+  const handleSearch: SearchProps['onSearch'] = (value) => {
+    navigate('?search=' + value)
+    searchMutation.mutate(value, {
+      onSuccess: (data) => {
+        setUserData(data?.data?.data)
+      },
+      onError: () => {
+        setUserData([])
+      }
+    })
   }
 
   return (
     <>
-      <Flex justify='space-between' align='center'>
+      <Flex justify='space-between' align='center' className='mb-4' gap={12}>
         <Form
           form={form}
           name='form-handle'
           noValidate
           onFinish={handleSubmit}
           initialValues={{ handler: dataSelectHandler[0].value, remember: true }}
-          className='mb-4'
         >
           <Space wrap>
             <Form.Item name='handler' className='mb-0'>
@@ -149,24 +177,24 @@ export default function User() {
             <Button htmlType='submit'>Submit</Button>
           </Space>
         </Form>
+        <Search placeholder='Search' allowClear onSearch={handleSearch} className='w-full md:w-1/3' size='large' />
       </Flex>
-
       <Table
-        dataSource={data?.data?.data}
+        dataSource={userData}
         columns={columns}
         rowSelection={{ ...rowSelection }}
         rowKey='id'
-        loading={isLoading}
+        loading={getAllUserMutation.isPending}
         bordered
         className='overflow-x-auto scrollbar-input'
         pagination={false}
       />
-      {data?.data?.pagination?.total_page !== 1 && (
+      {paginationData?.total_page !== 1 && (
         <Pagination
           showQuickJumper
-          current={data?.data?.pagination?.page}
-          pageSize={data?.data?.pagination?.size}
-          total={(data?.data?.pagination?.total_page ?? 0) * (data?.data?.pagination?.size ?? 1)}
+          current={paginationData?.page}
+          pageSize={paginationData?.size}
+          total={(paginationData?.total_page ?? 0) * (paginationData?.size ?? 1)}
           onChange={handleChangePagination}
           showSizeChanger={false}
           className='mt-4 text-right'

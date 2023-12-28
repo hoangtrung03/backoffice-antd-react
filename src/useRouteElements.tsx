@@ -7,6 +7,7 @@ import MainLayout from './layouts/MainLayout'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
 import Role from './pages/Role'
+import AddRole from './pages/Role/AddRole'
 import EditRole from './pages/Role/EditRole'
 import User from './pages/User'
 
@@ -52,6 +53,16 @@ export default function useRouteElements() {
             <MainLayout>
               <Suspense>
                 <EditRole />
+              </Suspense>
+            </MainLayout>
+          )
+        },
+        {
+          path: '/role/add',
+          element: (
+            <MainLayout>
+              <Suspense>
+                <AddRole />
               </Suspense>
             </MainLayout>
           )

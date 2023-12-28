@@ -116,7 +116,7 @@ export default function Login() {
             <Input.Password placeholder='Enter your password' className='h-10' />
           </Form.Item>
         </div>
-        <Button type='default' htmlType='submit' className='w-full'>
+        <Button type='default' htmlType='submit' className='w-full' loading={loginMutation.isPending}>
           Submit
         </Button>
       </Form>

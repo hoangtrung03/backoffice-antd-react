@@ -23,6 +23,14 @@ const userApi = {
   },
   deleteUserByIds(ids: string) {
     return http.delete<SuccessResponse<UserType[]>>(URL_USER + '/' + URL_DELETE + '?ids=' + ids)
+  },
+  searchUser(value: string, queryParam?: PaginationParams) {
+    return http.get<SuccessResponse<UserType[]>>(URL_USER + '/search', {
+      params: {
+        ...queryParam,
+        search: value
+      }
+    })
   }
 }
 

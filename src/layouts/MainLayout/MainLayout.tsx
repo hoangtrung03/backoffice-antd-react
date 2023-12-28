@@ -73,7 +73,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           style={{ padding: 0, background: colorBgContainer }}
           className='flex justify-end items-center !px-4 h-12'
         >
-          <p className='mr-4'>{profile?.firstname + ' ' + profile?.lastname}</p>
+          <p className='mr-4 h-full flex items-center'>{profile?.firstname + ' ' + profile?.lastname}</p>
           <Dropdown menu={{ items }}>
             <Avatar
               src='https://d2welvdu9aysdk.cloudfront.net/uploads/account/img-avatar-user.png'
