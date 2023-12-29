@@ -57,11 +57,9 @@ class Http {
 
         if (url === URL_AUTH + '/' + URL_LOGIN || url === URL_AUTH + '/' + URL_REGISTER) {
           const data = response.data as AuthResponse
-          console.log(data)
-
           this.accessToken = data.data.access_token
           this.refreshToken = data.data.refresh_token
-          setAccessTokenToCookie(this.accessToken, data.data.access_token_expires_in)
+          setAccessTokenToCookie(this.accessToken)
           setRefreshTokenToCookie(this.refreshToken, data.data.refresh_token_expires_in)
         } else if (url === URL_USER + '/' + URL_ME) {
           const data = response.data
@@ -77,7 +75,6 @@ class Http {
         return response
       },
       (error: AxiosError) => {
-        console.log('status', error.response?.status)
         if (
           ![HttpStatusCode.UnprocessableEntity, HttpStatusCode.Unauthorized].includes(error.response?.status as number)
         ) {
@@ -92,8 +89,8 @@ class Http {
         if (isAxiosUnauthorizedError<ErrorResponse<{ name: string; message: string }>>(error)) {
           const config = error.response?.config || ({ headers: {} } as InternalAxiosRequestConfig)
           const { url } = config
+
           //When token expires and request not request refresh token => go to call refresh token
-          console.log('call refresh token')
           if (isAxiosExpiredTokenError(error) && url !== URL_REFRESH_TOKEN) {
             // Prevent call 2 refresh token handleRefreshToken
             this.refreshTokenRequest = this.refreshTokenRequest
@@ -130,10 +127,8 @@ class Http {
         refresh_token: this.refreshToken
       })
       .then((res) => {
-        console.log(res)
-
         const { access_token } = res.data.data
-        setAccessTokenToCookie(access_token, res.data.data.access_token_expires_in)
+        setAccessTokenToCookie(access_token)
         this.accessToken = access_token
 
         return access_token

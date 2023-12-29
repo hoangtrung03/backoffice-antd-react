@@ -7,4 +7,4 @@ export type AuthResponse = SuccessResponse<{
   refresh_token_expires_in: number
 }>
 
-export type RefreshTokenResponse = SuccessResponse<{ access_token: string; access_token_expires_in: number }>
+export type RefreshTokenResponse = SuccessResponse<{ access_token: string }>

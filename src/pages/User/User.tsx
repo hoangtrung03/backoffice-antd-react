@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Button, Flex, Form, Input, Modal, Pagination, PaginationProps, Select, Space, Table } from 'antd'
 import { SearchProps } from 'antd/es/input'
 import { TableRowSelection } from 'antd/es/table/interface'
@@ -24,15 +24,17 @@ export default function User() {
     mutationFn: (queryParam?: PaginationParams) => userApi.getAllUser(queryParam)
   })
 
+  const { data: dataUser, refetch } = useQuery({
+    queryKey: ['user', queryConfig],
+    queryFn: () => userApi.getAllUser(queryConfig as PaginationParams)
+  })
+
   useEffect(() => {
-    getAllUserMutation.mutate(queryConfig as PaginationParams, {
-      onSuccess: (data) => {
-        setUserData(data?.data?.data)
-        setPaginationData(data?.data?.pagination)
-      }
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    if (dataUser) {
+      setUserData(dataUser?.data?.data)
+      setPaginationData(dataUser?.data?.pagination)
+    }
+  }, [dataUser])
 
   const deleteUserMutation = useMutation({
     mutationFn: (id: number | string) => userApi.deleteUserById(id)
@@ -58,7 +60,7 @@ export default function User() {
   const handleOnOK = (id: number | string) => {
     deleteUserMutation.mutate(id, {
       onSuccess: () => {
-        getAllUserMutation.reset()
+        refetch()
       }
     })
     setOpen(false)
@@ -133,6 +135,7 @@ export default function User() {
       ids &&
         deleteListUserMutation.mutate(ids, {
           onSuccess: () => {
+            refetch()
             setListSelectedUserId([])
           }
         })
