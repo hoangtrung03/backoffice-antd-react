@@ -1,10 +1,11 @@
 import { FileOutlined, KeyOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Avatar, Breadcrumb, Dropdown, Layout, Menu, theme } from 'antd'
-import React, { useContext, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import path from 'src/constants/path'
-import { AppContext } from 'src/contexts/app.context'
+import { UserType } from 'src/types/user.type'
+import { getProfileFromCookie } from 'src/utils/auth'
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -50,7 +51,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
     token: { colorBgContainer }
   } = theme.useToken()
 
-  const { profile } = useContext(AppContext)
+  const [userData, setUserData] = useState<UserType>()
+
+  useEffect(() => {
+    const profileData = getProfileFromCookie()
+    setUserData(profileData)
+    console.log('abc')
+  }, [])
 
   const routes = [
     { path: path.home, key: '1' },
@@ -73,7 +80,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           style={{ padding: 0, background: colorBgContainer }}
           className='flex justify-end items-center !px-4 h-12'
         >
-          <p className='mr-4 h-full flex items-center'>{profile?.firstname + ' ' + profile?.lastname}</p>
+          <p className='mr-4 h-full flex items-center'>{userData?.firstname + ' ' + userData?.lastname}</p>
           <Dropdown menu={{ items }}>
             <Avatar
               src='https://d2welvdu9aysdk.cloudfront.net/uploads/account/img-avatar-user.png'

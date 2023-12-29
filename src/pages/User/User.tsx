@@ -145,6 +145,7 @@ export default function User() {
 
   const handleChangePagination: PaginationProps['onChange'] = (pageNumber) => {
     queryConfig.page = pageNumber.toString()
+    refetch()
   }
 
   const handleSearch: SearchProps['onSearch'] = (value) => {
