@@ -1,7 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig, type AxiosInstance } from 'axios'
 
 import { config } from 'src/constants/config'
-import { AuthResponse, RefreshTokenReponse } from 'src/types/auth.type'
+import { AuthResponse, RefreshTokenResponse } from 'src/types/auth.type'
 import { ErrorResponse } from 'src/types/utils.type'
 
 import toast from 'react-hot-toast'
@@ -34,9 +34,7 @@ class Http {
       baseURL: config.BASE_URL,
       timeout: 10000,
       headers: {
-        'Content-Type': 'application/json',
-        'expire-access-token': 60 * 60 * 24, // 1 day
-        'expire-refresh-token': 60 * 60 * 24 * 160 // 160 day
+        'Content-Type': 'application/json'
       }
     })
     this.instance.interceptors.request.use(
@@ -59,10 +57,12 @@ class Http {
 
         if (url === URL_AUTH + '/' + URL_LOGIN || url === URL_AUTH + '/' + URL_REGISTER) {
           const data = response.data as AuthResponse
+          console.log(data)
+
           this.accessToken = data.data.access_token
           this.refreshToken = data.data.refresh_token
-          setAccessTokenToCookie(this.accessToken)
-          setRefreshTokenToCookie(this.refreshToken)
+          setAccessTokenToCookie(this.accessToken, data.data.access_token_expires_in)
+          setRefreshTokenToCookie(this.refreshToken, data.data.refresh_token_expires_in)
         } else if (url === URL_USER + '/' + URL_ME) {
           const data = response.data
 
@@ -77,6 +77,7 @@ class Http {
         return response
       },
       (error: AxiosError) => {
+        console.log('status', error.response?.status)
         if (
           ![HttpStatusCode.UnprocessableEntity, HttpStatusCode.Unauthorized].includes(error.response?.status as number)
         ) {
@@ -92,6 +93,7 @@ class Http {
           const config = error.response?.config || ({ headers: {} } as InternalAxiosRequestConfig)
           const { url } = config
           //When token expires and request not request refresh token => go to call refresh token
+          console.log('call refresh token')
           if (isAxiosExpiredTokenError(error) && url !== URL_REFRESH_TOKEN) {
             // Prevent call 2 refresh token handleRefreshToken
             this.refreshTokenRequest = this.refreshTokenRequest
@@ -124,12 +126,14 @@ class Http {
   }
   private handleRefreshToken() {
     return this.instance
-      .post<RefreshTokenReponse>(URL_REFRESH_TOKEN, {
+      .post<RefreshTokenResponse>(URL_AUTH + '/' + URL_REFRESH_TOKEN, {
         refresh_token: this.refreshToken
       })
       .then((res) => {
+        console.log(res)
+
         const { access_token } = res.data.data
-        setAccessTokenToCookie(access_token)
+        setAccessTokenToCookie(access_token, res.data.data.access_token_expires_in)
         this.accessToken = access_token
 
         return access_token

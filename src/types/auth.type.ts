@@ -3,8 +3,8 @@ import { SuccessResponse } from './utils.type'
 export type AuthResponse = SuccessResponse<{
   access_token: string
   refresh_token: string
-  // expires_refresh_token: number
-  // expires: number
+  access_token_expires_in: number
+  refresh_token_expires_in: number
 }>
 
-export type RefreshTokenReponse = SuccessResponse<{ access_token: string }>
+export type RefreshTokenResponse = SuccessResponse<{ access_token: string; access_token_expires_in: number }>
