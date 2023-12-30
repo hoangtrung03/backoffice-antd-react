@@ -20,11 +20,11 @@ export default function User() {
   const [form] = Form.useForm()
   const queryConfig = useQueryConfig()
 
-  const getAllUserMutation = useMutation({
-    mutationFn: (queryParam?: PaginationParams) => userApi.getAllUser(queryParam)
-  })
-
-  const { data: dataUser, refetch } = useQuery({
+  const {
+    data: dataUser,
+    refetch,
+    isLoading
+  } = useQuery({
     queryKey: ['user', queryConfig],
     queryFn: () => userApi.getAllUser(queryConfig as PaginationParams)
   })
@@ -48,9 +48,9 @@ export default function User() {
     mutationFn: (value: string, queryParam?: PaginationParams) => userApi.searchUser(value, queryParam)
   })
 
-  const handleEdit = (id: number) => {
-    console.log(id)
-  }
+  // const handleEdit = (id: number) => {
+  //   console.log(id)
+  // }
 
   const handleDelete = (id: number) => {
     setOpen(true)
@@ -111,7 +111,7 @@ export default function User() {
       render: (text: string, record: { id: number }) => {
         return (
           <Space size='middle'>
-            <Button onClick={() => handleEdit(record.id)}>Edit</Button>
+            {/* <Button onClick={() => handleEdit(record.id)}>Edit</Button> */}
             <Button type='primary' danger ghost onClick={() => handleDelete(record.id)}>
               Delete
             </Button>
@@ -188,7 +188,7 @@ export default function User() {
         columns={columns}
         rowSelection={{ ...rowSelection }}
         rowKey='id'
-        loading={getAllUserMutation.isPending}
+        loading={isLoading}
         bordered
         className='overflow-x-auto scrollbar-input'
         pagination={false}

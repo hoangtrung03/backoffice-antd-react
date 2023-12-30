@@ -4,6 +4,9 @@ import path from './constants/path'
 import { AppContext } from './contexts/app.context'
 import AuthLayout from './layouts/AuthLayout'
 import MainLayout from './layouts/MainLayout'
+import Email from './pages/Email'
+import AddEmail from './pages/Email/AddEmail'
+import EditEmail from './pages/Email/EditEmail'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
 import Role from './pages/Role'
@@ -63,6 +66,36 @@ export default function useRouteElements() {
             <MainLayout>
               <Suspense>
                 <AddRole />
+              </Suspense>
+            </MainLayout>
+          )
+        },
+        {
+          path: path.email,
+          element: (
+            <MainLayout>
+              <Suspense>
+                <Email />
+              </Suspense>
+            </MainLayout>
+          )
+        },
+        {
+          path: `${path.email}/add`,
+          element: (
+            <MainLayout>
+              <Suspense>
+                <AddEmail />
+              </Suspense>
+            </MainLayout>
+          )
+        },
+        {
+          path: `${path.email}/:id`,
+          element: (
+            <MainLayout>
+              <Suspense>
+                <EditEmail />
               </Suspense>
             </MainLayout>
           )

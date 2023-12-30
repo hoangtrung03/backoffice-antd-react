@@ -32,8 +32,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   const routes = [
     { path: path.home, key: '1' },
-    { path: `${path.role}`, key: '2' },
-    { path: '/email', key: '3' },
+    { path: path.role, key: '2' },
+    { path: path.email, key: '3' },
     { path: '/files', key: '4' }
   ]
 
@@ -64,7 +64,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
       '2',
       <KeyOutlined />
     ),
-    getItem('Email Template', '3', <MailOutlined />),
+    getItem(
+      <Link to={path.email} title='Email'>
+        Email
+      </Link>,
+      '3',
+      <MailOutlined />
+    ),
     // getItem('Team', '4', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
     getItem('Files', '5', <FileOutlined />)
   ]
