@@ -13,6 +13,12 @@ const emailApi = {
       }
     })
   },
+  updateEmailById(id: string | number, body: FormData) {
+    return http.put<SuccessResponse<EmailType>>(URL_EMAIL + '/update/' + id, body)
+  },
+  getEmailById(id: string | number) {
+    return http.get<SuccessResponse<EmailType>>(URL_EMAIL + '/get/' + id)
+  },
   deleteEmailById(id: number | string) {
     return http.delete<SuccessResponse<EmailType>>(URL_EMAIL + '/delete' + '/' + id)
   },
