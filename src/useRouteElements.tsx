@@ -4,6 +4,7 @@ import path from './constants/path'
 import { AppContext } from './contexts/app.context'
 import AuthLayout from './layouts/AuthLayout'
 import MainLayout from './layouts/MainLayout'
+import Category from './pages/Category'
 import Email from './pages/Email'
 import AddEmail from './pages/Email/AddEmail'
 import EditEmail from './pages/Email/EditEmail'
@@ -96,6 +97,16 @@ export default function useRouteElements() {
             <MainLayout>
               <Suspense>
                 <EditEmail />
+              </Suspense>
+            </MainLayout>
+          )
+        },
+        {
+          path: '/category',
+          element: (
+            <MainLayout>
+              <Suspense>
+                <Category />
               </Suspense>
             </MainLayout>
           )

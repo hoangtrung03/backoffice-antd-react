@@ -109,8 +109,6 @@ export default function Email() {
       dataIndex: 'status',
       key: 'status',
       render: (value: boolean) => {
-        console.log(value)
-
         return <p>{value === true ? 'Active' : 'Inactive'}</p>
       }
     },

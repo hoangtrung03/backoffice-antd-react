@@ -3,6 +3,7 @@ const path = {
   role: '/role',
   user: '/user',
   email: '/email',
+  category: '/category',
   profile: '/user/profile',
   changePassword: '/user/password',
   login: '/login',

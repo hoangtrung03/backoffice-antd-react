@@ -1,4 +1,4 @@
-import { FileOutlined, KeyOutlined, MailOutlined, UserOutlined } from '@ant-design/icons'
+import { KeyOutlined, MailOutlined, QrcodeOutlined, UserOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Avatar, Breadcrumb, Button, Dropdown, Layout, Menu, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
@@ -34,12 +34,18 @@ export default function MainLayout({ children }: MainLayoutProps) {
     { path: path.home, key: '1' },
     { path: path.role, key: '2' },
     { path: path.email, key: '3' },
-    { path: '/files', key: '4' }
+    { path: path.category, key: '4' }
   ]
 
-  const currentRoute = routes.find((route) => route.path === location.pathname)
-  const defaultSelectedKey = currentRoute ? currentRoute.key : '1'
+  const matchingRoute = routes.find((route) => {
+    if (route.path === path.home) {
+      return location.pathname === route.path
+    } else {
+      return location.pathname.startsWith(route.path)
+    }
+  })
 
+  const defaultSelectedKey = matchingRoute ? matchingRoute.key : '1'
   function getItem(label: React.ReactNode, key: React.Key, icon?: React.ReactNode, children?: MenuItem[]): MenuItem {
     return {
       key,
@@ -71,8 +77,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
       '3',
       <MailOutlined />
     ),
-    // getItem('Team', '4', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-    getItem('Files', '5', <FileOutlined />)
+    getItem(
+      <Link to={path.category} title='Category'>
+        Category
+      </Link>,
+      '4',
+      <QrcodeOutlined />
+    )
   ]
 
   const dropdownItems: MenuProps['items'] = [

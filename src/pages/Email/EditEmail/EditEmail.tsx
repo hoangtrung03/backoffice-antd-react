@@ -20,7 +20,7 @@ export default function EditEmail() {
   })
 
   const { data: dataEmail } = useQuery({
-    queryKey: ['email', ''],
+    queryKey: ['email'],
     queryFn: () => emailApi.getEmailById(id)
   })
 

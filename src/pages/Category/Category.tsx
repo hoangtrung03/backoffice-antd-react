@@ -1,76 +1,63 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Button, Flex, Form, Input, Modal, Pagination, PaginationProps, Select, Space, Table } from 'antd'
-import { SearchProps } from 'antd/es/input'
+import { Button, Flex, Form, Modal, Pagination, PaginationProps, Select, Space, Table } from 'antd'
+import Search, { SearchProps } from 'antd/es/input/Search'
 import { TableRowSelection } from 'antd/es/table/interface'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import userApi from 'src/apis/user.api'
+import categoryApi from 'src/apis/category.api'
 import useQueryConfig from 'src/hooks/useQueryConfig'
-import { UserType } from 'src/types/user.type'
+import { CategoryType } from 'src/types/category.type'
 import { PaginationParams, PaginationType, TableType } from 'src/types/utils.type'
-const { Search } = Input
 
-export default function User() {
-  const [open, setOpen] = useState(false)
-  const [selectedUserId, setSelectedUserId] = useState<number | string>('')
-  const [selectedListUserId, setListSelectedUserId] = useState<number[] | string[]>([])
-  const [userData, setUserData] = useState<UserType[] | undefined>([])
-  const [paginationData, setPaginationData] = useState<PaginationType | undefined>({})
-  const navigate = useNavigate()
+export default function Category() {
   const [form] = Form.useForm()
+  const navigate = useNavigate()
+  const [open, setOpen] = useState(false)
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | string>('')
+  const [selectedListCategoryId, setListSelectedCategoryId] = useState<number[] | string[]>([])
+  const [paginationData, setPaginationData] = useState<PaginationType | undefined>({})
+  const [categoryData, setCategoryData] = useState<CategoryType[] | undefined>([])
   const queryConfig = useQueryConfig()
 
   const {
-    data: dataUser,
+    data: dataCategory,
     refetch,
     isLoading
   } = useQuery({
     queryKey: ['user', queryConfig],
-    queryFn: () => userApi.getAllUser(queryConfig as PaginationParams)
+    queryFn: () => categoryApi.getAllCategory(queryConfig as PaginationParams)
   })
 
   useEffect(() => {
-    if (dataUser) {
-      setUserData(dataUser?.data?.data)
-      setPaginationData(dataUser?.data?.pagination)
+    if (dataCategory) {
+      setCategoryData(dataCategory?.data?.data)
+      setPaginationData(dataCategory?.data?.pagination)
     }
-  }, [dataUser])
+  }, [dataCategory])
 
-  const deleteUserMutation = useMutation({
-    mutationFn: (id: number | string) => userApi.deleteUserById(id)
+  const deleteCategoryMutation = useMutation({
+    mutationFn: (id: number | string) => categoryApi.deleteCategoryById(id)
   })
 
-  const deleteListUserMutation = useMutation({
-    mutationFn: (id: string) => userApi.deleteUserByIds(id)
+  const deleteListCategoryMutation = useMutation({
+    mutationFn: (id: string) => categoryApi.deleteCategoryByIds(id)
   })
 
   const searchMutation = useMutation({
-    mutationFn: (value: string, queryParam?: PaginationParams) => userApi.searchUser(value, queryParam)
+    mutationFn: (value: string, queryParam?: PaginationParams) => categoryApi.searchCategory(value, queryParam)
   })
-
-  // const handleEdit = (id: number) => {
-  //   console.log(id)
-  // }
 
   const handleDelete = (id: number) => {
     setOpen(true)
-    setSelectedUserId(id)
+    setSelectedCategoryId(id)
   }
 
-  const handleOnOK = (id: number | string) => {
-    deleteUserMutation.mutate(id, {
-      onSuccess: () => {
-        refetch()
-      }
-    })
-    setOpen(false)
-  }
-
-  const rowSelection: TableRowSelection<UserType> = {
-    onChange: (selectedRowKeys) => {
-      setListSelectedUserId(selectedRowKeys.map((id) => id.toString()))
+  const dataSelectHandler = [
+    {
+      label: 'Drop',
+      value: 'drop'
     }
-  }
+  ]
 
   const columns: TableType[] = [
     {
@@ -79,30 +66,42 @@ export default function User() {
       key: 'id'
     },
     {
-      title: 'First Name',
-      dataIndex: 'firstname',
-      key: 'firstname'
+      title: 'Name',
+      dataIndex: 'name',
+      key: 'name'
     },
     {
-      title: 'Last Name',
-      dataIndex: 'lastname',
-      key: 'lastname'
+      title: 'Slug',
+      dataIndex: 'slug',
+      key: 'slug'
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email'
+      title: 'Children Categories',
+      dataIndex: 'subCategories',
+      key: 'subCategories',
+      render: (subCategories: CategoryType[]) => {
+        return (
+          <p className='whitespace-pre'>
+            {subCategories &&
+              subCategories
+                .map(
+                  (category) =>
+                    `ID: ${category.id}` +
+                    ' - ' +
+                    `Name: ${category.name.length > 10 ? category.name.substring(0, 10) + '...' : category.name}`
+                )
+                .join('\r\n')}
+          </p>
+        )
+      }
     },
     {
-      title: 'Date of Birth',
-      dataIndex: 'date_of_birth',
-      key: 'date_of_birth'
-    },
-    {
-      title: 'Roles',
-      dataIndex: 'roles',
-      key: 'roles',
-      render: (roles: { id: number; name: string }[]) => roles && roles.map((role) => role.name).join(', ')
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (value: boolean) => {
+        return <p>{value === true ? 'Active' : 'Inactive'}</p>
+      }
     },
     {
       title: 'Action',
@@ -121,25 +120,37 @@ export default function User() {
     }
   ]
 
-  const dataSelectHandler = [
-    {
-      label: 'Drop',
-      value: 'drop'
-    }
-  ]
-
   const handleSubmit = () => {
     if (form.getFieldsValue().handler === 'drop') {
-      const ids = selectedListUserId.map((id) => id.toString()).join(',')
+      const ids = selectedListCategoryId.map((id) => id.toString()).join(',')
 
       ids &&
-        deleteListUserMutation.mutate(ids, {
+        deleteListCategoryMutation.mutate(ids, {
           onSuccess: () => {
             refetch()
-            setListSelectedUserId([])
+            setListSelectedCategoryId([])
           }
         })
       setOpen(false)
+    }
+  }
+
+  const handleSearch: SearchProps['onSearch'] = (value) => {
+    navigate('?search=' + value)
+    searchMutation.mutate(value, {
+      onSuccess: (data) => {
+        setCategoryData(data?.data?.data)
+        setPaginationData(data?.data?.pagination)
+      },
+      onError: () => {
+        setCategoryData([])
+      }
+    })
+  }
+
+  const rowSelection: TableRowSelection<CategoryType> = {
+    onChange: (selectedRowKeys) => {
+      setListSelectedCategoryId(selectedRowKeys.map((id) => id.toString()))
     }
   }
 
@@ -148,17 +159,13 @@ export default function User() {
     refetch()
   }
 
-  const handleSearch: SearchProps['onSearch'] = (value) => {
-    navigate('?search=' + value)
-    searchMutation.mutate(value, {
-      onSuccess: (data) => {
-        setUserData(data?.data?.data)
-        setPaginationData(data?.data?.pagination)
-      },
-      onError: () => {
-        setUserData([])
+  const handleOnOK = (id: number | string) => {
+    deleteCategoryMutation.mutate(id, {
+      onSuccess: () => {
+        refetch()
       }
     })
+    setOpen(false)
   }
 
   return (
@@ -185,7 +192,7 @@ export default function User() {
         <Search placeholder='Search' allowClear onSearch={handleSearch} className='w-full md:w-1/3' size='large' />
       </Flex>
       <Table
-        dataSource={userData}
+        dataSource={categoryData}
         columns={columns}
         rowSelection={{ ...rowSelection }}
         rowKey='id'
@@ -209,10 +216,10 @@ export default function User() {
         title='Confirm delete'
         open={open}
         okButtonProps={{ danger: true }}
-        onOk={() => handleOnOK(selectedUserId)}
+        onOk={() => handleOnOK(selectedCategoryId)}
         onCancel={() => setOpen(false)}
       >
-        <p>Are you sure you want to delete this user?</p>
+        <p>Are you sure you want to delete this category?</p>
       </Modal>
     </>
   )
