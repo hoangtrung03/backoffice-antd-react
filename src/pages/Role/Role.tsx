@@ -3,6 +3,7 @@ import { Button, Flex, Modal, Pagination, PaginationProps, Space, Table } from '
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import roleApi from 'src/apis/role.api'
+import path from 'src/constants/path'
 import useQueryConfig from 'src/hooks/useQueryConfig'
 import { PaginationParams, TableType } from 'src/types/utils.type'
 
@@ -83,7 +84,7 @@ export default function Role() {
   return (
     <>
       <Flex justify='end' align='center' className='mb-4'>
-        <Button onClick={() => navigate('/role/add')}>Add Role</Button>
+        <Button onClick={() => navigate(path.addRole)}>Add Role</Button>
       </Flex>
 
       <Table

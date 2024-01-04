@@ -3,6 +3,6 @@ export interface CategoryType {
   slug: string
   name: string
   status: boolean
-  description: string
+  description: string | null
   subCategories: CategoryType[]
 }

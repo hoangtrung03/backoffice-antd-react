@@ -157,7 +157,7 @@ export default function Email() {
           </Space>
         </Form>
         {/* <Search placeholder='Search' allowClear onSearch={handleSearch} className='w-full md:w-1/3' size='large' /> */}
-        <Button onClick={() => navigate(`${path.email}/add`)}>Add Email</Button>
+        <Button onClick={() => navigate(path.addEmail)}>Add Email</Button>
       </Flex>
       <Table
         dataSource={emailData}

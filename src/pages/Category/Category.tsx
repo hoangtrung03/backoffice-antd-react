@@ -5,6 +5,7 @@ import { TableRowSelection } from 'antd/es/table/interface'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import categoryApi from 'src/apis/category.api'
+import path from 'src/constants/path'
 import useQueryConfig from 'src/hooks/useQueryConfig'
 import { CategoryType } from 'src/types/category.type'
 import { PaginationParams, PaginationType, TableType } from 'src/types/utils.type'
@@ -189,7 +190,10 @@ export default function Category() {
             <Button htmlType='submit'>Submit</Button>
           </Space>
         </Form>
-        <Search placeholder='Search' allowClear onSearch={handleSearch} className='w-full md:w-1/3' size='large' />
+        <Flex justify='end' align='center' className='flex-1' gap={12}>
+          <Search placeholder='Search' allowClear onSearch={handleSearch} className='w-full md:w-1/3' size='large' />
+          <Button onClick={() => navigate(path.addCategory)}>Add Category</Button>
+        </Flex>
       </Flex>
       <Table
         dataSource={categoryData}

@@ -17,7 +17,7 @@ export default function useQueryConfig() {
     page: queryParams.page !== undefined ? queryParams.page : '1',
     per_page: queryParams.per_page !== undefined ? queryParams.per_page : '10',
     sort_by: queryParams.sort_by !== undefined ? queryParams.sort_by : '',
-    sort_direction: queryParams.sort_direction !== undefined ? queryParams.sort_direction : ''
+    sort_direction: queryParams.sort_direction !== undefined ? queryParams.sort_direction : 'desc'
   }
 
   // Remove keys with undefined values

@@ -5,6 +5,7 @@ import { AppContext } from './contexts/app.context'
 import AuthLayout from './layouts/AuthLayout'
 import MainLayout from './layouts/MainLayout'
 import Category from './pages/Category'
+import AddCategory from './pages/Category/AddCategory'
 import Email from './pages/Email'
 import AddEmail from './pages/Email/AddEmail'
 import EditEmail from './pages/Email/EditEmail'
@@ -62,7 +63,7 @@ export default function useRouteElements() {
           )
         },
         {
-          path: '/role/add',
+          path: path.addRole,
           element: (
             <MainLayout>
               <Suspense>
@@ -82,7 +83,7 @@ export default function useRouteElements() {
           )
         },
         {
-          path: `${path.email}/add`,
+          path: path.addEmail,
           element: (
             <MainLayout>
               <Suspense>
@@ -107,6 +108,16 @@ export default function useRouteElements() {
             <MainLayout>
               <Suspense>
                 <Category />
+              </Suspense>
+            </MainLayout>
+          )
+        },
+        {
+          path: path.addCategory,
+          element: (
+            <MainLayout>
+              <Suspense>
+                <AddCategory />
               </Suspense>
             </MainLayout>
           )
