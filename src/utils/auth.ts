@@ -3,8 +3,9 @@ import { UserType } from 'src/types/user.type'
 
 export const localStorageEventTarget = new EventTarget()
 
-export const setAccessTokenToCookie = (access_token: string) => {
-  Cookies.set('access_token', access_token)
+export const setAccessTokenToCookie = (access_token: string, access_token_expires_in: number) => {
+  const expirationDate = new Date(access_token_expires_in * 1000 + 5000)
+  Cookies.set('access_token', access_token, { expires: expirationDate })
 }
 
 export const setRefreshTokenToCookie = (refresh_token: string, refresh_token_expires_in: number) => {

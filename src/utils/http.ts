@@ -59,7 +59,7 @@ class Http {
           const data = response.data as AuthResponse
           this.accessToken = data.data.access_token
           this.refreshToken = data.data.refresh_token
-          setAccessTokenToCookie(this.accessToken)
+          setAccessTokenToCookie(this.accessToken, data.data.access_token_expires_in)
           setRefreshTokenToCookie(this.refreshToken, data.data.refresh_token_expires_in)
         } else if (url === URL_USER + '/' + URL_ME) {
           const data = response.data
@@ -128,7 +128,7 @@ class Http {
       })
       .then((res) => {
         const { access_token } = res.data.data
-        setAccessTokenToCookie(access_token)
+        setAccessTokenToCookie(access_token, res.data.data.access_token_expires_in)
         this.accessToken = access_token
 
         return access_token
