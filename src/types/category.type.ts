@@ -4,5 +4,6 @@ export interface CategoryType {
   name: string
   status: boolean
   description: string | null
-  subCategories: CategoryType[]
+  sub_categories: CategoryType[]
+  parent_category_id: number | null
 }

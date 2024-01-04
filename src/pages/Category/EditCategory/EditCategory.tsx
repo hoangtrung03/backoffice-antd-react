@@ -1,9 +1,9 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Button, Form, Input, Radio, RadioChangeEvent, Space } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import { useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import categoryApi from 'src/apis/category.api'
 import path from 'src/constants/path'
 import { CategoryType } from 'src/types/category.type'
@@ -13,12 +13,32 @@ type FormData = Pick<CategoryType, 'name' | 'slug' | 'status' | 'description' | 
   parentCategoryId: number
 }
 
-export default function AddCategory() {
+export default function EditCategory() {
   const [form] = Form.useForm()
   const navigation = useNavigate()
+  const { id } = useParams() as { id: string | number }
+
+  const { data: dataCategory } = useQuery({
+    queryKey: ['email'],
+    queryFn: () => categoryApi.getCategoryById(id)
+  })
+
+  console.log(dataCategory)
+
+  useEffect(() => {
+    if (dataCategory && dataCategory.data) {
+      form.setFieldsValue({
+        name: dataCategory?.data?.data?.name,
+        parentCategoryId: dataCategory?.data?.data?.parent_category_id,
+        slug: dataCategory?.data?.data?.slug,
+        status: dataCategory?.data?.data?.status,
+        description: dataCategory?.data?.data?.description
+      })
+    }
+  }, [dataCategory, form])
 
   const addCategoryMutation = useMutation({
-    mutationFn: (body: FormData) => categoryApi.addCategory(body)
+    mutationFn: (body: FormData) => categoryApi.editCategoryById(id, body)
   })
 
   const handleSubmit = (dataForm: FormData) => {
@@ -37,12 +57,6 @@ export default function AddCategory() {
   const onChange = (e: RadioChangeEvent) => {
     form.setFieldValue('status', e.target.value)
   }
-
-  useEffect(() => {
-    form.setFieldsValue({
-      status: true
-    })
-  }, [form])
 
   return (
     <>

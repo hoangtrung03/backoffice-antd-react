@@ -16,7 +16,7 @@ import {
   getAccessTokenFromCookie,
   getRefreshTokenFromCookie,
   setAccessTokenToCookie,
-  setProfileToCookie,
+  setProfileToLS,
   setRefreshTokenToCookie
 } from './auth'
 import { isAxiosExpiredTokenError, isAxiosUnauthorizedError } from './utils'
@@ -59,13 +59,13 @@ class Http {
           const data = response.data as AuthResponse
           this.accessToken = data.data.access_token
           this.refreshToken = data.data.refresh_token
-          setAccessTokenToCookie(this.accessToken, data.data.access_token_expires_in)
+          setAccessTokenToCookie(this.accessToken, data.data.refresh_token_expires_in)
           setRefreshTokenToCookie(this.refreshToken, data.data.refresh_token_expires_in)
         } else if (url === URL_USER + '/' + URL_ME) {
           const data = response.data
 
           if (data?.data?.roles?.some((role: UserRole) => role.name.includes('ADMIN'))) {
-            setProfileToCookie(data.data)
+            setProfileToLS(data.data)
           }
         } else if (url === URL_LOGOUT) {
           this.accessToken = ''

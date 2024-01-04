@@ -24,11 +24,11 @@ export const clearCookies = () => {
 export const getAccessTokenFromCookie = () => Cookies.get('access_token') || ''
 export const getRefreshTokenFromCookie = () => Cookies.get('refresh_token') || ''
 
-export const getProfileFromCookie = () => {
-  const result = Cookies.get('profile')
+export const getProfileFromLS = () => {
+  const result = localStorage.getItem('profile')
   return result ? JSON.parse(result) : null
 }
 
-export const setProfileToCookie = (profile: UserType) => {
-  Cookies.set('profile', JSON.stringify(profile))
+export const setProfileToLS = (profile: UserType) => {
+  localStorage.setItem('profile', JSON.stringify(profile))
 }

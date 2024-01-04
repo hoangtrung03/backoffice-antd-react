@@ -6,6 +6,7 @@ import AuthLayout from './layouts/AuthLayout'
 import MainLayout from './layouts/MainLayout'
 import Category from './pages/Category'
 import AddCategory from './pages/Category/AddCategory'
+import EditCategory from './pages/Category/EditCategory'
 import Email from './pages/Email'
 import AddEmail from './pages/Email/AddEmail'
 import EditEmail from './pages/Email/EditEmail'
@@ -103,7 +104,7 @@ export default function useRouteElements() {
           )
         },
         {
-          path: '/category',
+          path: path.category,
           element: (
             <MainLayout>
               <Suspense>
@@ -118,6 +119,16 @@ export default function useRouteElements() {
             <MainLayout>
               <Suspense>
                 <AddCategory />
+              </Suspense>
+            </MainLayout>
+          )
+        },
+        {
+          path: path.editCategory,
+          element: (
+            <MainLayout>
+              <Suspense>
+                <EditCategory />
               </Suspense>
             </MainLayout>
           )

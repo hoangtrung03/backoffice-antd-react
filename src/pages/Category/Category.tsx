@@ -53,6 +53,10 @@ export default function Category() {
     setSelectedCategoryId(id)
   }
 
+  const handleEdit = (id: number) => {
+    navigate(`${path.category}/${id}`)
+  }
+
   const dataSelectHandler = [
     {
       label: 'Drop',
@@ -78,13 +82,13 @@ export default function Category() {
     },
     {
       title: 'Children Categories',
-      dataIndex: 'subCategories',
-      key: 'subCategories',
-      render: (subCategories: CategoryType[]) => {
+      dataIndex: 'sub_categories',
+      key: 'sub_categories',
+      render: (sub_categories: CategoryType[]) => {
         return (
           <p className='whitespace-pre'>
-            {subCategories &&
-              subCategories
+            {sub_categories &&
+              sub_categories
                 .map(
                   (category) =>
                     `ID: ${category.id}` +
@@ -111,7 +115,7 @@ export default function Category() {
       render: (text: string, record: { id: number }) => {
         return (
           <Space size='middle'>
-            {/* <Button onClick={() => handleEdit(record.id)}>Edit</Button> */}
+            <Button onClick={() => handleEdit(record.id)}>Edit</Button>
             <Button type='primary' danger ghost onClick={() => handleDelete(record.id)}>
               Delete
             </Button>

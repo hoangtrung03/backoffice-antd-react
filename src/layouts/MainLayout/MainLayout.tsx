@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 import { Link, useLocation } from 'react-router-dom'
 import path from 'src/constants/path'
 import { UserType } from 'src/types/user.type'
-import { clearCookies, getProfileFromCookie } from 'src/utils/auth'
+import { clearCookies, getProfileFromLS } from 'src/utils/auth'
 
 const { Header, Content, Footer, Sider } = Layout
 
@@ -26,7 +26,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [userData, setUserData] = useState<UserType>()
 
   useEffect(() => {
-    const profileData = getProfileFromCookie()
+    const profileData = getProfileFromLS()
     setUserData(profileData)
   }, [])
 
