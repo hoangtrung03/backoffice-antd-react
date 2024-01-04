@@ -9,9 +9,7 @@ import path from 'src/constants/path'
 import { CategoryType } from 'src/types/category.type'
 import { convertToSlug } from 'src/utils/utils'
 
-type FormData = Pick<CategoryType, 'name' | 'slug' | 'status' | 'description' | 'parent_category_id'> & {
-  parentCategoryId: number
-}
+type FormData = Pick<CategoryType, 'name' | 'slug' | 'status' | 'description' | 'parent_category_id'>
 
 export default function AddCategory() {
   const [form] = Form.useForm()
@@ -89,7 +87,7 @@ export default function AddCategory() {
           </Form.Item>
         </div>
         <div className='mb-4 md:mb-8'>
-          <Form.Item label='Parent Category Id' name='parentCategoryId' className='mb-4 font-medium'>
+          <Form.Item label='Parent Category Id' name='parent_category_id' className='mb-4 font-medium'>
             <Input type='number' placeholder='Enter Parent Category Id' className='h-10' />
           </Form.Item>
         </div>
