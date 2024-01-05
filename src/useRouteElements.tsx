@@ -12,6 +12,7 @@ import AddEmail from './pages/Email/AddEmail'
 import EditEmail from './pages/Email/EditEmail'
 import Login from './pages/Login'
 import NotFound from './pages/NotFound'
+import Product from './pages/Product'
 import Role from './pages/Role'
 import AddRole from './pages/Role/AddRole'
 import EditRole from './pages/Role/EditRole'
@@ -129,6 +130,16 @@ export default function useRouteElements() {
             <MainLayout>
               <Suspense>
                 <EditCategory />
+              </Suspense>
+            </MainLayout>
+          )
+        },
+        {
+          path: path.product,
+          element: (
+            <MainLayout>
+              <Suspense>
+                <Product />
               </Suspense>
             </MainLayout>
           )

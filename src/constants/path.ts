@@ -9,6 +9,8 @@ const path = {
   category: '/category',
   addCategory: '/category/add',
   editCategory: '/category/:id',
+  product: '/product',
+  addProduct: '/product/add',
   profile: '/user/profile',
   changePassword: '/user/password',
   login: '/login',

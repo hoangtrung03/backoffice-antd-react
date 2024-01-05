@@ -1,4 +1,4 @@
-import { KeyOutlined, MailOutlined, QrcodeOutlined, UserOutlined } from '@ant-design/icons'
+import { AppstoreOutlined, KeyOutlined, MailOutlined, QrcodeOutlined, UserOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Avatar, Breadcrumb, Button, Dropdown, Layout, Menu, theme } from 'antd'
 import React, { useEffect, useState } from 'react'
@@ -34,7 +34,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
     { path: path.home, key: '1' },
     { path: path.role, key: '2' },
     { path: path.email, key: '3' },
-    { path: path.category, key: '4' }
+    { path: path.category, key: '4' },
+    { path: path.product, key: '5' }
   ]
 
   const matchingRoute = routes.find((route) => {
@@ -83,6 +84,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
       </Link>,
       '4',
       <QrcodeOutlined />
+    ),
+    getItem(
+      <Link to={path.product} title='Product'>
+        Product
+      </Link>,
+      '5',
+      <AppstoreOutlined />
     )
   ]
 
